@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<title>SSM Smart Home</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="css/build.css" />
+		<link rel="stylesheet" href="css/font-awesome.css" />
+		<style>
+			@font-face {
+				font-family: eras;
+				src: url(fonts/ERASBD.TTF);
+			}
+			
+			.navbar-bran{
+				font-family: eras;
+				font-size: 25pt;
+				text-align: center;
+				font-weight: bold;
+				letter-spacing: 15px;
+				color: #fff;
+			}
+			
+			html,body {
+				background: #333;
+			}
+			
+			.theme-showcase{
+				margin-top: 100px;
+			}
+			
+			#chroomsens, #chroomouts, #chroomtitle, #chroomjobs {
+				color: white;
+				text-align: center;
+				font-family: eras;
+				font-size: 20pt;
+				text-align: center;
+				font-weight: bold;
+				letter-spacing: 5px;
+				color: #fff;
+				margin-top: 50px;
+			}
+			.devp {
+				padding: 3px;
+			}
+			
+			.dev, .out, .job {
+				margin-top: 3px;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				color: #fff;
+				text-align: left;
+				font-family: eras;
+				font-size: 20pt;
+				border: 2px solid #F6F6F6;
+				border-radius: 100px;
+			}
+			
+			.out {
+				border: 2px solid #A60000;
+				cursor: pointer;
+			}
+			.out:hover{
+				border: 2px solid #FF0000;
+			}
+			.out.connected:hover{
+				border: 2px solid #0F0;
+			}
+			.out:hover .glyphicon{
+				color: #f00;
+			}
+			.out.connected:hover .glyphicon{
+				color: #0f0;
+			}
+
+			.settings {
+				cursor: pointer;
+			}
+			.settings:hover {
+				border: 2px solid #888;
+			}
+			.settings:hover .glyphicon {
+				color: #888;
+			}
+
+			.out.connected {
+				border: 2px solid #00A600;
+			}
+			.out .glyphicon{
+				color: #A60000;
+			}
+			.out.connected .glyphicon{
+				color: #00A600;
+			}
+
+			.dev span, .out span, .job span{
+				margin-left: 20px;
+			}
+			.dev .glyphicon, .out .glyphicon, .job .glyphicon{
+				margin-top: 10px;
+				font-size: 25pt;
+			}
+			.dev-title {
+				font-size: 14pt;
+				color: #888;
+				letter-spacing: 2px;
+			}
+			
+			.job { 
+				border: none;
+			}
+			
+			.job-title {
+				font-size: 14pt;
+				color: #888;
+				letter-spacing: 2px;
+			}
+			#mainrowjobs {
+				color: white;
+				font-family: eras;
+				font-size: 15pt;
+				font-weight: bold;
+			}
+			.processing {
+				color: #F8F8F8;
+				border: 2px solid #F8F8F8;
+				cursor: wait;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class='row'>
+					<div class="col-md-12 navbar-header navbar-bran">
+						SSM SMART HOME
+					</div>
+				</div>
+			</div>
+		</nav>		
+		<div class="container theme-showcase" role="main">
+			<div id='mainrowtitle' class="row">
+				<div class='col-md-12'>
+					<div id="chroomtitle">Room0<div class='job-title'><a href="index.html">Choose another room</a></div><div class='last_update job-title'>Last Sync:</div></div>
+				</div>
+	        </div>
+			<div class='col-md-4 devp'>
+				<div id=onall class='out connected'>
+					<span class='glyphicon glyphicon-lamp' aria-hidden='true'></span>
+					<span class='dev-title'>Room0 - </span>
+					<span>Turn on all</span>
+				</div>
+			</div>
+			<div class='col-md-4 devp'>
+				<div id=offall class='out'>
+					<span class='glyphicon glyphicon-lamp' aria-hidden='true'></span>
+					<span class='dev-title'>Room0 - </span>
+					<span>Turn off all</span>
+				</div>
+			</div>
+			<div class='col-md-4 devp'>
+				<div class='dev settings'>
+					<span class='glyphicon glyphicon-cog' aria-hidden='true'></span>
+					<span class='dev-title'>Room0 - </span>
+					<span>Settings</span>
+				</div>
+			</div>
+			
+			<div id='mainrowsens' class="row">
+				<div class='col-md-12'>
+					<div id="chroomsens">Sensors</div>
+				</div>
+	        </div>
+			<div id='mainrowouts' class="row">
+				<div class='col-md-12'>
+					<div id="chroomouts">Outputs</div>
+				</div>
+	        </div>
+			<div id='mainrowjobs' class="row">
+				<div class='col-md-12'>
+					<div id="chroomjobs">Jobs</div>
+				</div>
+				<div class='row'>
+					<div class='col-md-2'>
+						NEW JOB: 
+					</div>
+					<div class='col-md-2'>
+						TIME: <select  style='color: #333' class='timeselect_hour'></select>
+						<select  style='color: #333' class='timeselect_min'></select>
+					</div>
+					<div class='col-md-2'>
+						OUTPUT: <select style='color: #333' class='outselect'></select>
+					</div>
+					<div class='col-md-2'>
+						WHAT: <select style='color: #333' class='whatselect'><option>ON</option><option>OFF</option></select>
+					</div>
+					<div class='col-md-2'>
+						REPEAT: <select style='color: #333' class='repeat'><option>YES</option><option>NO</option></select>
+					</div>
+					<div class='col-md-2'>
+						<button id=setjob style='color: #333'>SET</button>
+					</div>
+				</div>
+	        </div>
+        </div>
+		<script type="text/javascript">
+		for ( var i = 0 ; i < 24 ; i ++ )
+		{
+			$(".timeselect_hour").append($("<option>" + i + "</option>"));
+		}
+		for ( var i = 0 ; i < 60 ; i ++ )
+		{
+			$(".timeselect_min").append($("<option>" + i + "</option>"));
+		}
+		var getUrlParameter = function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName,
+				i;
+
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+			}
+		};
+		$.ajax({
+			url: "/state?room=" + getUrlParameter('room'),
+			dataType: "json",
+			method: 'GET',
+		}).done(function(data) {
+			console.log(data);
+			for ( var tex in data )
+			{
+				if ( tex[0] == 's' ) // sensor 
+				{
+					if ( data[tex] != 0 )
+					{
+						$("<div class='col-md-3 devp'><div class='dev'><span class='glyphicon glyphicon-scale' aria-hidden='true'></span><span class='dev-title'>Dev" + tex.substr(1) + " - </span><span class='sensor' sensorname='" + tex + "' >30</span></div></div>").insertAfter($("#mainrowsens"));
+					}
+				}
+				else if ( tex[0] == 'o' ) // output
+				{
+					if ( data[tex] != 0 )
+					{
+						$(".outselect").append($("<option>Dev" + tex.substr(1) + "</option>"));
+						$("<div class='col-md-3 devp'><div class='out'><span class='glyphicon glyphicon-lamp' aria-hidden='true'></span><span class='dev-title'>Dev" + tex.substr(1) + " - </span><span class='output' outputname='" + tex + "' >OFF</span></div></div>").insertAfter($("#mainrowouts"));
+					}
+				}
+				else if ( tex[0] == 'j' ) // job;
+				{
+					for (var q in data[tex])
+					{
+						$("<div class='col-md-12 devp'><div class='job'><span class='glyphicon glyphicon-lamp' aria-hidden='true'></span><span class='dev-title'>Job0 - @" + data[tex][q]['h'] + ":" + data[tex][q]['m'] + " set " + data[tex][q]['o'] + " to " + data[tex][q]['w'] + ", REPEAT:" + data[tex][q]['r'] + " <button id=" + data[tex][q]['id'] + " class='btn-danger'>DELETE</button></span></div></div>").insertAfter($("#mainrowjobs"));
+					}
+				}
+			}
+		});
+		$.ajax({
+			url: "/sets?room=" + getUrlParameter('room'),
+			dataType: "json",
+			method: 'GET',
+		}).done(function(data) {
+			for ( var tex in data )
+			{
+				if ( tex[0] == 'j' ) // job;
+				{
+					for (var q in data[tex])
+					{
+						$("<div class='col-md-12 devp'><div class='job'><span class='glyphicon glyphicon-lamp' aria-hidden='true'></span><span class='dev-title'>Job0 - @" + data[tex][q]['h'] + ":" + data[tex][q]['m'] + " set " + data[tex][q]['o'] + " to " + data[tex][q]['w'] + ", REPEAT:" + data[tex][q]['r'] + " <button id=" + data[tex][q]['id'] + " class='btn-danger'>DELETE</button></span></div></div>").insertAfter($("#mainrowjobs"));
+					}
+				}
+			}
+		});
+		$(document).ready(function(){
+			$(document).on("click", "div.out", function(){
+				if ( this.id == "onall" || this.id == "offall" )
+					return ;
+				if ( ! $(this).hasClass("processing") )
+				{
+					$(this).addClass("processing");
+					$.ajax({
+						url: ( $(this).hasClass("connected") ? "/clearout?p=" : "/setout?p=" ) + $(this).children(".output").attr("outputname").substr(1),
+						dataType: "json",
+						method: 'GET',
+					}).done(function(){
+					}).fail(function(){
+						$(this).removeClass("processing");
+					});
+				}				
+			});
+			var getSensor = function getSensor(){
+				$.ajax({
+					url: "/sensor",
+					dataType: "json",
+					method: 'GET',
+				}).done(function(data) {
+					for ( sens in data )
+					{
+						$("span.sensor").each(function(){
+							if ( $(this).attr('sensorname') == sens )
+							{
+								$(this).text(data[sens]);
+							}
+						});
+					}
+					
+					setTimeout(function(){
+						$.ajax({
+							url: "/pullout",
+							dataType: "json",
+							method: 'GET',
+						}).done(function(data) {
+							for ( outs in data )
+							{
+								$("span.output").each(function(){
+									if ( $(this).attr('outputname') == outs )
+									{
+										$(this).text(data[outs] == '1' ? 'ON' : 'OFF');
+										$(this).parent().removeClass("processing");
+										if ( data[outs] == '1' && ! $(this).parent().hasClass("connected") )
+										{
+											$(this).parent().addClass("connected");
+										}
+										else if ( data[outs] == '0' && $(this).parent().hasClass("connected") )
+										{
+											$(this).parent().removeClass("connected");
+										}
+									}
+								});
+							}
+							var currentdate = new Date(); 
+							var datetime = "Last Sync: " + currentdate.getDate() + "/"
+											+ (currentdate.getMonth()+1)  + "/" 
+											+ currentdate.getFullYear() + " @ "  
+											+ currentdate.getHours() + ":"  
+											+ currentdate.getMinutes() + ":" 
+											+ currentdate.getSeconds();
+							$(".last_update").text(datetime);
+							setTimeout(getSensor,1000);
+						})
+					},1000);
+				});
+			}
+			getSensor();
+		});
+		$("#onall").click(function(){
+			$(".output").each(function(){
+				$(this).parent().addClass("processing");
+				$.ajax({
+					url: "/setout?p=" + $(this).attr("outputname").substr(1),
+					dataType: "json",
+					method: 'GET',
+				}).done(function(){
+				}).fail(function(){
+					$(this).parent().removeClass("processing");
+				});
+			});
+		});
+		$("#offall").click(function(){
+			$(".output").each(function(){
+				$(this).parent().addClass("processing");
+				$.ajax({
+					url: "/clearout?p=" + $(this).attr("outputname").substr(1),
+					dataType: "json",
+					method: 'GET',
+				}).done(function(){
+				}).fail(function(){
+					$(this).parent().removeClass("processing");
+				});
+			});
+		});
+		$(".settings").click(function(){
+			window.location = 'configroom.html?room=' + getUrlParameter('room');
+		});
+		$("#setjob").click(function(){
+			var str = $(".timeselect_hour").val() + "," +
+					  $(".timeselect_min").val() + "," +
+					  $(".outselect").val() + "," +
+					  $(".whatselect").val() + "," +
+					  $(".repeat").val();
+
+ 		    $.ajax({
+				url: "/jobs?room=" + getUrlParameter('room') + "&set=" + str,
+				dataType: "json",
+				method: 'GET',
+			});
+			
+			$(".timeselect_hour").val("0");
+			$(".timeselect_min").val("0");
+			$(".outselect").val("");
+			$(".whatselect").val("ON");
+			$(".repeat").val("YES");
+		});
+		</script>
+	</body>
+</html>

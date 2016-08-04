@@ -1,0 +1,21 @@
+RAM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+adc_data                                                          0x02C6       8
+output                                                            0x02CE      12
+input_index                                                       0x02DA       1
+_seed                                                             0x02DB       4
+
+EEPROM Allocation
+Variable                                                          Address   Size
+--------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                          Register  Size
+--------------------------------------------------------------------------------
+buf                                                               R5           1
+state                                                             R6,R7        2
+lcd_backlight                                                     R8,R9        2
+_lcd_x                                                            R4           1
+_lcd_y                                                            R11          1
+_lcd_maxx                                                         R10          1

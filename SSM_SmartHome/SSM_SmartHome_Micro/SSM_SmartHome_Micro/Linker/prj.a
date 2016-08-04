@@ -1,0 +1,850 @@
+;/*****************************************************
+;This program was produced by the
+;CodeWizardAVR V2.05.3 Standard
+;Automatic Program Generator
+;© Copyright 1998-2011 Pavel Haiduc, HP InfoTech s.r.l.
+;http://www.hpinfotech.com
+;
+;Project :
+;Version :
+;Date    : 12/27/2015
+;Author  : Saleh
+;Company : GRCG
+;Comments:
+;
+;
+;Chip type               : ATmega32A
+;Program type            : Application
+;AVR Core Clock frequency: 12.000000 MHz
+;Memory model            : Small
+;External RAM size       : 0
+;Data Stack size         : 512
+;*****************************************************/
+;
+;#include <mega32a.h>
+;PCODE: $00000000 VOL: 0
+	#ifndef __SLEEP_DEFINED__
+;PCODE: $00000001 VOL: 0
+	#define __SLEEP_DEFINED__
+;PCODE: $00000002 VOL: 0
+	.EQU __se_bit=0x80
+;PCODE: $00000003 VOL: 0
+	.EQU __sm_mask=0x70
+;PCODE: $00000004 VOL: 0
+	.EQU __sm_powerdown=0x20
+;PCODE: $00000005 VOL: 0
+	.EQU __sm_powersave=0x30
+;PCODE: $00000006 VOL: 0
+	.EQU __sm_standby=0x60
+;PCODE: $00000007 VOL: 0
+	.EQU __sm_ext_standby=0x70
+;PCODE: $00000008 VOL: 0
+	.EQU __sm_adc_noise_red=0x10
+;PCODE: $00000009 VOL: 0
+	.SET power_ctrl_reg=mcucr
+;PCODE: $0000000A VOL: 0
+	#endif
+;PCODE: $0000000B VOL: 0
+;PCODE: $0000000C VOL: 0
+;
+;#include <alcd_ks0073.h>
+;
+;#include <delay.h>
+;#include <stdio.h>
+;#include <stdlib.h>
+;#include <string.h>
+;
+;#ifndef RXB8
+;	#define RXB8 1
+;#endif
+;
+;#ifndef TXB8
+;	#define TXB8 0
+;#endif
+;
+;#ifndef UPE
+;	#define UPE 2
+;#endif
+;
+;#ifndef DOR
+;	#define DOR 3
+;#endif
+;
+;#ifndef FE
+;	#define FE 4
+;#endif
+;
+;#ifndef UDRE
+;	#define UDRE 5
+;#endif
+;
+;#ifndef RXC
+;	#define RXC 7
+;#endif
+;
+;#define FRAMING_ERROR (1<<FE)
+;#define PARITY_ERROR (1<<UPE)
+;#define DATA_OVERRUN (1<<DOR)
+;#define DATA_REGISTER_EMPTY (1<<UDRE)
+;#define RX_COMPLETE (1<<RXC)
+;
+;#define F_CPU 16000000
+;#define BAUDRATE 9600
+;#define BAUD_PRESCALLER (((F_CPU / (BAUDRATE * 16UL))) - 1)
+;
+;#define FIRST_ADC_INPUT 0
+;#define LAST_ADC_INPUT 7
+;#define ADC_VREF_TYPE 0x20
+;
+;unsigned char adc_data[8];
+;char output[12];
+;char buf;
+;int state;
+;int lcd_backlight;
+;
+;unsigned char USART_receive(void){
+; 0000 0051 unsigned char USART_receive(void){
+
+	.CSEG
+;PCODE: $0000000D VOL: 0
+;PCODE: $0000000E VOL: 0
+; 0000 0052 	while(!(UCSRA & (1<<RXC)));
+;PCODE: $0000000F VOL: 0
+;PCODE: $00000010 VOL: 0
+;PCODE: $00000011 VOL: 0
+;PCODE: $00000012 VOL: 0
+;PCODE: $00000013 VOL: 0
+;PCODE: $00000014 VOL: 0
+; 0000 0053 	return UDR;
+;PCODE: $00000015 VOL: 0
+;PCODE: $00000016 VOL: 0
+; 0000 0054 }
+;PCODE: $00000017 VOL: 0
+;
+;/* Function to send byte/char */
+;void USART_send( unsigned char data){
+; 0000 0057 void USART_send( unsigned char data){
+;PCODE: $00000018 VOL: 0
+;PCODE: $00000019 VOL: 0
+; 0000 0058 	while(!(UCSRA & (1<<UDRE)));
+;PCODE: $0000001A VOL: 0
+;	data -> Y+0
+;PCODE: $0000001B VOL: 0
+;PCODE: $0000001C VOL: 0
+;PCODE: $0000001D VOL: 0
+;PCODE: $0000001E VOL: 0
+;PCODE: $0000001F VOL: 0
+;PCODE: $00000020 VOL: 0
+; 0000 0059 	UDR = data;
+;PCODE: $00000021 VOL: 0
+;PCODE: $00000022 VOL: 0
+; 0000 005A }
+;PCODE: $00000023 VOL: 0
+;PCODE: $00000024 VOL: 0
+;PCODE: $00000025 VOL: 0
+;
+;/* Send string */
+;/*
+;void USART_putstring(char* StringPtr){
+;	while(*StringPtr != 0x00){
+;		USART_send(*StringPtr);
+;	StringPtr++;}
+;}
+;*/
+;// ADC interrupt service routine
+;// with auto input scanning
+;interrupt [ADC_INT] void adc_isr(void)
+; 0000 0067 {
+;PCODE: $00000026 VOL: 0
+;PCODE: $00000027 VOL: 0
+; 0000 0068 	static unsigned char input_index=0;
+; 0000 0069 	// Read the 8 most significant bits
+; 0000 006A 	// of the AD conversion result
+; 0000 006B 	adc_data[input_index]=ADCH;
+;PCODE: $00000028 VOL: 0
+;PCODE: $00000029 VOL: 0
+;PCODE: $0000002A VOL: 0
+;PCODE: $0000002B VOL: 0
+;PCODE: $0000002C VOL: 0
+; 0000 006C 	// Select next ADC input
+; 0000 006D 	if (++input_index > (LAST_ADC_INPUT-FIRST_ADC_INPUT))
+;PCODE: $0000002D VOL: 0
+;PCODE: $0000002E VOL: 0
+;PCODE: $0000002F VOL: 0
+;PCODE: $00000030 VOL: 0
+;PCODE: $00000031 VOL: 0
+; 0000 006E 	   input_index=0;
+;PCODE: $00000032 VOL: 0
+;PCODE: $00000033 VOL: 0
+; 0000 006F 	ADMUX=(FIRST_ADC_INPUT | (ADC_VREF_TYPE & 0xff))+input_index;
+;PCODE: $00000034 VOL: 0
+;PCODE: $00000035 VOL: 0
+;PCODE: $00000036 VOL: 0
+;PCODE: $00000037 VOL: 0
+; 0000 0070 	// Delay needed for the stabilization of the ADC input voltage
+; 0000 0071 	delay_us(10);
+;PCODE: $00000038 VOL: 0
+; 0000 0072 	// Start the AD conversion
+; 0000 0073 	ADCSRA|=0x40;
+;PCODE: $00000039 VOL: 0
+;PCODE: $0000003A VOL: 0
+; 0000 0074 }
+;PCODE: $0000003B VOL: 0
+;PCODE: $0000003C VOL: 0
+;PCODE: $0000003D VOL: 0
+;
+;// External Interrupt 0 service routine
+;interrupt [EXT_INT0] void ext_int0_isr(void)
+; 0000 0078 {
+;PCODE: $0000003E VOL: 0
+;PCODE: $0000003F VOL: 0
+; 0000 0079 	// Place your code here
+; 0000 007A     lcd_backlight = 10;
+;PCODE: $00000040 VOL: 0
+;PCODE: $00000041 VOL: 0
+; 0000 007B }
+;PCODE: $00000042 VOL: 0
+;PCODE: $00000043 VOL: 0
+;PCODE: $00000044 VOL: 0
+;
+;// Timer 0 overflow interrupt service routine
+;void update(void)
+; 0000 007F {
+;PCODE: $00000045 VOL: 0
+;PCODE: $00000046 VOL: 0
+; 0000 0080 /*
+; 0000 0081     // Place your code here
+; 0000 0082 	char str[16];
+; 0000 0083     // 8 sensor, 12 output (8 220V, 4 5V)
+; 0000 0084     // 16 chars
+; 0000 0085     switch ( state )
+; 0000 0086     {
+; 0000 0087         case 0:
+; 0000 0088 //            sprintf(str,"SSM Smart Home %c",computer_state);
+; 0000 0089             break ;
+; 0000 008A         case 1:
+; 0000 008B             sprintf(str,"S1:%d,S2:%d,C%c",adc_data[0],adc_data[1],buf);
+; 0000 008C             break ;
+; 0000 008D         case 2:
+; 0000 008E             sprintf(str,"S3:%d,S4:%d,C%c",adc_data[2],adc_data[3],buf);
+; 0000 008F             break ;
+; 0000 0090         case 3:
+; 0000 0091             sprintf(str,"S5:%d,S6:%d,C%c",adc_data[4],adc_data[5],buf);
+; 0000 0092             break ;
+; 0000 0093         case 4:
+; 0000 0094             sprintf(str,"S7:%d,S8:%d,C%c",adc_data[6],adc_data[7],buf);
+; 0000 0095             break ;
+; 0000 0096         case 5:
+; 0000 0097             sprintf(str,"O0:%d,O1:%d,C%c",output[0],output[1],buf);
+; 0000 0098             break ;
+; 0000 0099         case 6:
+; 0000 009A             sprintf(str,"O2:%d,O3:%d,C%c",output[2],output[3],buf);
+; 0000 009B             break ;
+; 0000 009C         case 7:
+; 0000 009D             sprintf(str,"O4:%d,O5:%d,C%c",output[4],output[5],buf);
+; 0000 009E             break ;
+; 0000 009F         case 8:
+; 0000 00A0             sprintf(str,"O6:%d,O7:%d,C%c",output[6],output[7],buf);
+; 0000 00A1             break ;
+; 0000 00A2     }
+; 0000 00A3     lcd_clear();
+; 0000 00A4     lcd_puts(str);
+; 0000 00A5 
+; 0000 00A6     lcd_backlight --;
+; 0000 00A7     if ( lcd_backlight > 0 )
+; 0000 00A8     {
+; 0000 00A9         PORTB.3 = 1;
+; 0000 00AA     }
+; 0000 00AB     else
+; 0000 00AC     {
+; 0000 00AD         PORTB.3 = 0;
+; 0000 00AE     }
+; 0000 00AF     */
+; 0000 00B0     PORTC.0 = output[0];
+;PCODE: $00000047 VOL: 0
+;PCODE: $00000048 VOL: 0
+;PCODE: $00000049 VOL: 0
+;PCODE: $0000004A VOL: 0
+;PCODE: $0000004B VOL: 0
+;PCODE: $0000004C VOL: 0
+;PCODE: $0000004D VOL: 0
+;PCODE: $0000004E VOL: 0
+;PCODE: $0000004F VOL: 0
+;PCODE: $00000050 VOL: 0
+; 0000 00B1     PORTC.1 = output[1];
+;PCODE: $00000051 VOL: 0
+;PCODE: $00000052 VOL: 0
+;PCODE: $00000053 VOL: 0
+;PCODE: $00000054 VOL: 0
+;PCODE: $00000055 VOL: 0
+;PCODE: $00000056 VOL: 0
+;PCODE: $00000057 VOL: 0
+;PCODE: $00000058 VOL: 0
+;PCODE: $00000059 VOL: 0
+;PCODE: $0000005A VOL: 0
+;PCODE: $0000005B VOL: 0
+; 0000 00B2     PORTC.2 = output[2];
+;PCODE: $0000005C VOL: 0
+;PCODE: $0000005D VOL: 0
+;PCODE: $0000005E VOL: 0
+;PCODE: $0000005F VOL: 0
+;PCODE: $00000060 VOL: 0
+;PCODE: $00000061 VOL: 0
+;PCODE: $00000062 VOL: 0
+;PCODE: $00000063 VOL: 0
+;PCODE: $00000064 VOL: 0
+;PCODE: $00000065 VOL: 0
+;PCODE: $00000066 VOL: 0
+; 0000 00B3     PORTC.3 = output[3];
+;PCODE: $00000067 VOL: 0
+;PCODE: $00000068 VOL: 0
+;PCODE: $00000069 VOL: 0
+;PCODE: $0000006A VOL: 0
+;PCODE: $0000006B VOL: 0
+;PCODE: $0000006C VOL: 0
+;PCODE: $0000006D VOL: 0
+;PCODE: $0000006E VOL: 0
+;PCODE: $0000006F VOL: 0
+;PCODE: $00000070 VOL: 0
+;PCODE: $00000071 VOL: 0
+; 0000 00B4     PORTC.4 = output[4];
+;PCODE: $00000072 VOL: 0
+;PCODE: $00000073 VOL: 0
+;PCODE: $00000074 VOL: 0
+;PCODE: $00000075 VOL: 0
+;PCODE: $00000076 VOL: 0
+;PCODE: $00000077 VOL: 0
+;PCODE: $00000078 VOL: 0
+;PCODE: $00000079 VOL: 0
+;PCODE: $0000007A VOL: 0
+;PCODE: $0000007B VOL: 0
+;PCODE: $0000007C VOL: 0
+; 0000 00B5     PORTC.5 = output[5];
+;PCODE: $0000007D VOL: 0
+;PCODE: $0000007E VOL: 0
+;PCODE: $0000007F VOL: 0
+;PCODE: $00000080 VOL: 0
+;PCODE: $00000081 VOL: 0
+;PCODE: $00000082 VOL: 0
+;PCODE: $00000083 VOL: 0
+;PCODE: $00000084 VOL: 0
+;PCODE: $00000085 VOL: 0
+;PCODE: $00000086 VOL: 0
+;PCODE: $00000087 VOL: 0
+; 0000 00B6     PORTC.6 = output[6];
+;PCODE: $00000088 VOL: 0
+;PCODE: $00000089 VOL: 0
+;PCODE: $0000008A VOL: 0
+;PCODE: $0000008B VOL: 0
+;PCODE: $0000008C VOL: 0
+;PCODE: $0000008D VOL: 0
+;PCODE: $0000008E VOL: 0
+;PCODE: $0000008F VOL: 0
+;PCODE: $00000090 VOL: 0
+;PCODE: $00000091 VOL: 0
+;PCODE: $00000092 VOL: 0
+; 0000 00B7     PORTC.7 = output[7];
+;PCODE: $00000093 VOL: 0
+;PCODE: $00000094 VOL: 0
+;PCODE: $00000095 VOL: 0
+;PCODE: $00000096 VOL: 0
+;PCODE: $00000097 VOL: 0
+;PCODE: $00000098 VOL: 0
+;PCODE: $00000099 VOL: 0
+;PCODE: $0000009A VOL: 0
+;PCODE: $0000009B VOL: 0
+;PCODE: $0000009C VOL: 0
+;PCODE: $0000009D VOL: 0
+; 0000 00B8 }
+;PCODE: $0000009E VOL: 0
+;PCODE: $0000009F VOL: 0
+;
+;// Declare your global variables here
+;void main(void)
+; 0000 00BC {
+;PCODE: $000000A0 VOL: 0
+; 0000 00BD     int i;
+; 0000 00BE 	// Declare your local variables here
+; 0000 00BF     state = 0;
+;	i -> R16,R17
+;PCODE: $000000A1 VOL: 0
+; 0000 00C0     lcd_backlight = 10;
+;PCODE: $000000A2 VOL: 0
+;PCODE: $000000A3 VOL: 0
+; 0000 00C1     for ( i = 0 ; i < 12 ; i ++ )
+;PCODE: $000000A4 VOL: 0
+;PCODE: $000000A5 VOL: 0
+;PCODE: $000000A6 VOL: 0
+;PCODE: $000000A7 VOL: 0
+;PCODE: $000000A8 VOL: 0
+;PCODE: $000000A9 VOL: 0
+;PCODE: $000000AA VOL: 0
+;PCODE: $000000AB VOL: 0
+;PCODE: $000000AC VOL: 0
+; 0000 00C2     {
+; 0000 00C3         output[i] = 0 ;
+;PCODE: $000000AD VOL: 0
+;PCODE: $000000AE VOL: 0
+;PCODE: $000000AF VOL: 0
+;PCODE: $000000B0 VOL: 0
+; 0000 00C4     }
+;PCODE: $000000B1 VOL: 0
+;PCODE: $000000B2 VOL: 0
+;PCODE: $000000B3 VOL: 0
+;PCODE: $000000B4 VOL: 0
+;PCODE: $000000B5 VOL: 0
+; 0000 00C5 
+; 0000 00C6 
+; 0000 00C7 	// Input/Output Ports initialization
+; 0000 00C8 	// Port A initialization
+; 0000 00C9 	// Func7=In Func6=In Func5=In Func4=In Func3=In Func2=In Func1=In Func0=In
+; 0000 00CA 	// State7=T State6=T State5=T State4=T State3=T State2=T State1=T State0=T
+; 0000 00CB 	PORTA=0x00;
+;PCODE: $000000B6 VOL: 0
+;PCODE: $000000B7 VOL: 0
+; 0000 00CC 	DDRA=0x00;
+;PCODE: $000000B8 VOL: 0
+;PCODE: $000000B9 VOL: 0
+; 0000 00CD 
+; 0000 00CE 	// Port B initialization
+; 0000 00CF 	// Func7=Out Func6=Out Func5=Out Func4=Out Func3=Out Func2=Out Func1=Out Func0=Out
+; 0000 00D0 	// State7=0 State6=0 State5=0 State4=0 State3=0 State2=0 State1=0 State0=0
+; 0000 00D1 	PORTB=0x00;
+;PCODE: $000000BA VOL: 0
+;PCODE: $000000BB VOL: 0
+; 0000 00D2 	DDRB=0xFF;
+;PCODE: $000000BC VOL: 0
+;PCODE: $000000BD VOL: 0
+; 0000 00D3 
+; 0000 00D4 	// Port C initialization
+; 0000 00D5 	// Func7=Out Func6=Out Func5=Out Func4=Out Func3=Out Func2=Out Func1=Out Func0=Out
+; 0000 00D6 	// State7=0 State6=0 State5=0 State4=0 State3=0 State2=0 State1=0 State0=0
+; 0000 00D7 	PORTC=0x00;
+;PCODE: $000000BE VOL: 0
+;PCODE: $000000BF VOL: 0
+; 0000 00D8 	DDRC=0xFF;
+;PCODE: $000000C0 VOL: 0
+;PCODE: $000000C1 VOL: 0
+; 0000 00D9 
+; 0000 00DA 	// Port D initialization
+; 0000 00DB 	// Func7=Out Func6=Out Func5=Out Func4=Out Func3=Out Func2=In Func1=In Func0=In
+; 0000 00DC 	// State7=0 State6=0 State5=0 State4=0 State3=0 State2=P State1=T State0=T
+; 0000 00DD 	PORTD=0x04;
+;PCODE: $000000C2 VOL: 0
+;PCODE: $000000C3 VOL: 0
+; 0000 00DE 	DDRD=0xF8;
+;PCODE: $000000C4 VOL: 0
+;PCODE: $000000C5 VOL: 0
+; 0000 00DF 
+; 0000 00E0 	// Timer/Counter 0 initialization
+; 0000 00E1 	// Clock source: System Clock
+; 0000 00E2 	// Clock value: 15.625 kHz
+; 0000 00E3 	// Mode: Normal top=0xFF
+; 0000 00E4 	// OC0 output: Disconnected
+; 0000 00E5 	TCCR0=0x00;
+;PCODE: $000000C6 VOL: 0
+;PCODE: $000000C7 VOL: 0
+; 0000 00E6 	TCNT0=0x00;
+;PCODE: $000000C8 VOL: 0
+;PCODE: $000000C9 VOL: 0
+; 0000 00E7 	OCR0=0x00;
+;PCODE: $000000CA VOL: 0
+;PCODE: $000000CB VOL: 0
+; 0000 00E8 
+; 0000 00E9 	// Timer/Counter 1 initialization
+; 0000 00EA 	// Clock source: System Clock
+; 0000 00EB 	// Clock value: Timer1 Stopped
+; 0000 00EC 	// Mode: Normal top=0xFFFF
+; 0000 00ED 	// OC1A output: Discon.
+; 0000 00EE 	// OC1B output: Discon.
+; 0000 00EF 	// Noise Canceler: Off
+; 0000 00F0 	// Input Capture on Falling Edge
+; 0000 00F1 	// Timer1 Overflow Interrupt: Off
+; 0000 00F2 	// Input Capture Interrupt: Off
+; 0000 00F3 	// Compare A Match Interrupt: Off
+; 0000 00F4 	// Compare B Match Interrupt: Off
+; 0000 00F5 	TCCR1A=0x00;
+;PCODE: $000000CC VOL: 0
+;PCODE: $000000CD VOL: 0
+; 0000 00F6 	TCCR1B=0x00;
+;PCODE: $000000CE VOL: 0
+;PCODE: $000000CF VOL: 0
+; 0000 00F7 	TCNT1H=0x00;
+;PCODE: $000000D0 VOL: 0
+;PCODE: $000000D1 VOL: 0
+; 0000 00F8 	TCNT1L=0x00;
+;PCODE: $000000D2 VOL: 0
+;PCODE: $000000D3 VOL: 0
+; 0000 00F9 	ICR1H=0x00;
+;PCODE: $000000D4 VOL: 0
+;PCODE: $000000D5 VOL: 0
+; 0000 00FA 	ICR1L=0x00;
+;PCODE: $000000D6 VOL: 0
+;PCODE: $000000D7 VOL: 0
+; 0000 00FB 	OCR1AH=0x00;
+;PCODE: $000000D8 VOL: 0
+;PCODE: $000000D9 VOL: 0
+; 0000 00FC 	OCR1AL=0x00;
+;PCODE: $000000DA VOL: 0
+;PCODE: $000000DB VOL: 0
+; 0000 00FD 	OCR1BH=0x00;
+;PCODE: $000000DC VOL: 0
+;PCODE: $000000DD VOL: 0
+; 0000 00FE 	OCR1BL=0x00;
+;PCODE: $000000DE VOL: 0
+;PCODE: $000000DF VOL: 0
+; 0000 00FF 
+; 0000 0100 	// Timer/Counter 2 initialization
+; 0000 0101 	// Clock source: System Clock
+; 0000 0102 	// Clock value: Timer2 Stopped
+; 0000 0103 	// Mode: Normal top=0xFF
+; 0000 0104 	// OC2 output: Disconnected
+; 0000 0105 	ASSR=0x00;
+;PCODE: $000000E0 VOL: 0
+;PCODE: $000000E1 VOL: 0
+; 0000 0106 	TCCR2=0x00;
+;PCODE: $000000E2 VOL: 0
+;PCODE: $000000E3 VOL: 0
+; 0000 0107 	TCNT2=0x00;
+;PCODE: $000000E4 VOL: 0
+;PCODE: $000000E5 VOL: 0
+; 0000 0108 	OCR2=0x00;
+;PCODE: $000000E6 VOL: 0
+;PCODE: $000000E7 VOL: 0
+; 0000 0109 
+; 0000 010A 	// External Interrupt(s) initialization
+; 0000 010B 	// INT0: On
+; 0000 010C 	// INT0 Mode: Low level
+; 0000 010D 	// INT1: Off
+; 0000 010E 	// INT2: Off
+; 0000 010F 	GICR|=0x40;
+;PCODE: $000000E8 VOL: 0
+;PCODE: $000000E9 VOL: 0
+;PCODE: $000000EA VOL: 0
+; 0000 0110 	MCUCR=0x00;
+;PCODE: $000000EB VOL: 0
+;PCODE: $000000EC VOL: 0
+; 0000 0111 	MCUCSR=0x00;
+;PCODE: $000000ED VOL: 0
+;PCODE: $000000EE VOL: 0
+; 0000 0112 	GIFR=0x40;
+;PCODE: $000000EF VOL: 0
+;PCODE: $000000F0 VOL: 0
+; 0000 0113 
+; 0000 0114 	// Timer(s)/Counter(s) Interrupt(s) initialization
+; 0000 0115 	TIMSK=0x00;
+;PCODE: $000000F1 VOL: 0
+;PCODE: $000000F2 VOL: 0
+; 0000 0116 
+; 0000 0117 	// USART initialization
+; 0000 0118 	// Communication Parameters: 8 Data, 1 Stop, No Parity
+; 0000 0119 	// USART Receiver: On
+; 0000 011A 	// USART Transmitter: On
+; 0000 011B 	// USART Mode: Asynchronous
+; 0000 011C 	// USART Baud Rate: 9600
+; 0000 011D 	UCSRA=0x00;
+;PCODE: $000000F3 VOL: 0
+;PCODE: $000000F4 VOL: 0
+; 0000 011E 	UBRRH = (BAUD_PRESCALLER>>8);
+;PCODE: $000000F5 VOL: 0
+;PCODE: $000000F6 VOL: 0
+; 0000 011F 	UBRRL = (BAUD_PRESCALLER);
+;PCODE: $000000F7 VOL: 0
+;PCODE: $000000F8 VOL: 0
+; 0000 0120 	UCSRB = (1<<RXEN)|(1<<TXEN);
+;PCODE: $000000F9 VOL: 0
+;PCODE: $000000FA VOL: 0
+; 0000 0121 	UCSRC = (1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL);
+;PCODE: $000000FB VOL: 0
+;PCODE: $000000FC VOL: 0
+; 0000 0122 
+; 0000 0123 	// Analog Comparator initialization
+; 0000 0124 	// Analog Comparator: Off
+; 0000 0125 	// Analog Comparator Input Capture by Timer/Counter 1: Off
+; 0000 0126 	ACSR=0x80;
+;PCODE: $000000FD VOL: 0
+;PCODE: $000000FE VOL: 0
+; 0000 0127 	SFIOR=0x00;
+;PCODE: $000000FF VOL: 0
+;PCODE: $00000100 VOL: 0
+; 0000 0128 
+; 0000 0129 	// ADC initialization
+; 0000 012A 	// ADC Clock frequency: 750.000 kHz
+; 0000 012B 	// ADC Voltage Reference: AREF pin
+; 0000 012C 	// Only the 8 most significant bits of
+; 0000 012D 	// the AD conversion result are used
+; 0000 012E 	ADMUX=FIRST_ADC_INPUT | (ADC_VREF_TYPE & 0xff);
+;PCODE: $00000101 VOL: 0
+;PCODE: $00000102 VOL: 0
+; 0000 012F 	ADCSRA=0xCC;
+;PCODE: $00000103 VOL: 0
+;PCODE: $00000104 VOL: 0
+; 0000 0130 	ADCSR |= (1 << ADSC);
+;PCODE: $00000105 VOL: 0
+;PCODE: $00000106 VOL: 0
+; 0000 0131 
+; 0000 0132 	// SPI initialization
+; 0000 0133 	// SPI disabled
+; 0000 0134 	SPCR=0x00;
+;PCODE: $00000107 VOL: 0
+;PCODE: $00000108 VOL: 0
+; 0000 0135 
+; 0000 0136 	// TWI initialization
+; 0000 0137 	// TWI disabled
+; 0000 0138 	TWCR=0x00;
+;PCODE: $00000109 VOL: 0
+;PCODE: $0000010A VOL: 0
+; 0000 0139 
+; 0000 013A 	// Alphanumeric LCD initialization
+; 0000 013B 	// Connections are specified in the
+; 0000 013C 	// Project|Configure|C Compiler|Libraries|Alphanumeric LCD menu:
+; 0000 013D 	// RS - PORTB Bit 0
+; 0000 013E 	// RD - PORTB Bit 1
+; 0000 013F 	// EN - PORTB Bit 2
+; 0000 0140 	// D4 - PORTB Bit 4
+; 0000 0141 	// D5 - PORTB Bit 5
+; 0000 0142 	// D6 - PORTB Bit 6
+; 0000 0143 	// D7 - PORTB Bit 7
+; 0000 0144 	// Characters/line: 16
+; 0000 0145 
+; 0000 0146 	lcd_init(16);
+;PCODE: $0000010B VOL: 0
+;PCODE: $0000010C VOL: 0
+; 0000 0147 	lcd_puts("Welcome.");
+;PCODE: $0000010D VOL: 0
+;PCODE: $0000010E VOL: 0
+;PCODE: $0000010F VOL: 0
+; 0000 0148     delay_ms(500);
+;PCODE: $00000110 VOL: 0
+;PCODE: $00000111 VOL: 0
+; 0000 0149 
+; 0000 014A 	#asm("sei")
+;PCODE: $00000112 VOL: 0
+	sei
+;PCODE: $00000113 VOL: 0
+; 0000 014B 	PORTD.7 = 1 ;
+;PCODE: $00000114 VOL: 0
+;PCODE: $00000115 VOL: 0
+; 0000 014C     lcd_clear();
+;PCODE: $00000116 VOL: 0
+; 0000 014D 	lcd_puts("Starting System.");
+;PCODE: $00000117 VOL: 0
+;PCODE: $00000118 VOL: 0
+;PCODE: $00000119 VOL: 0
+; 0000 014E     delay_ms(500);
+;PCODE: $0000011A VOL: 0
+;PCODE: $0000011B VOL: 0
+; 0000 014F 	while(1)
+;PCODE: $0000011C VOL: 0
+; 0000 0150 	{
+; 0000 0151         lcd_clear();
+;PCODE: $0000011D VOL: 0
+; 0000 0152     	lcd_puts("Receiving");
+;PCODE: $0000011E VOL: 0
+;PCODE: $0000011F VOL: 0
+;PCODE: $00000120 VOL: 0
+; 0000 0153         buf = USART_receive();
+;PCODE: $00000121 VOL: 0
+;PCODE: $00000122 VOL: 0
+; 0000 0154         PORTD.7 = 1 - PORTD.7 ;
+;PCODE: $00000123 VOL: 0
+;PCODE: $00000124 VOL: 0
+;PCODE: $00000125 VOL: 0
+;PCODE: $00000126 VOL: 0
+;PCODE: $00000127 VOL: 0
+;PCODE: $00000128 VOL: 0
+;PCODE: $00000129 VOL: 0
+;PCODE: $0000012A VOL: 0
+;PCODE: $0000012B VOL: 0
+;PCODE: $0000012C VOL: 0
+;PCODE: $0000012D VOL: 0
+;PCODE: $0000012E VOL: 0
+;PCODE: $0000012F VOL: 0
+; 0000 0155 
+; 0000 0156         // get sensor data 01234567
+; 0000 0157         if ( buf >= '0' && buf <= '7' )
+;PCODE: $00000130 VOL: 0
+;PCODE: $00000131 VOL: 0
+;PCODE: $00000132 VOL: 0
+;PCODE: $00000133 VOL: 0
+;PCODE: $00000134 VOL: 0
+;PCODE: $00000135 VOL: 0
+;PCODE: $00000136 VOL: 0
+;PCODE: $00000137 VOL: 0
+;PCODE: $00000138 VOL: 0
+;PCODE: $00000139 VOL: 0
+; 0000 0158         {
+; 0000 0159             lcd_clear();
+;PCODE: $0000013A VOL: 0
+; 0000 015A         	lcd_puts("Send sensors data");
+;PCODE: $0000013B VOL: 0
+;PCODE: $0000013C VOL: 0
+;PCODE: $0000013D VOL: 0
+; 0000 015B             #asm ("cli");
+;PCODE: $0000013E VOL: 0
+	cli
+;PCODE: $0000013F VOL: 0
+; 0000 015C             delay_ms(20);
+;PCODE: $00000140 VOL: 0
+;PCODE: $00000141 VOL: 0
+;PCODE: $00000142 VOL: 0
+; 0000 015D             USART_send ( adc_data [ buf - '0' ] );
+;PCODE: $00000143 VOL: 0
+;PCODE: $00000144 VOL: 0
+;PCODE: $00000145 VOL: 0
+;PCODE: $00000146 VOL: 0
+;PCODE: $00000147 VOL: 0
+;PCODE: $00000148 VOL: 0
+; 0000 015E             #asm ("sei");
+;PCODE: $00000149 VOL: 0
+	sei
+;PCODE: $0000014A VOL: 0
+; 0000 015F         }
+; 0000 0160         // clear output
+; 0000 0161         // abcdefgh
+; 0000 0162         else if ( buf >= 'a' && buf <= 'h' )
+;PCODE: $0000014B VOL: 0
+;PCODE: $0000014C VOL: 0
+;PCODE: $0000014D VOL: 0
+;PCODE: $0000014E VOL: 0
+;PCODE: $0000014F VOL: 0
+;PCODE: $00000150 VOL: 0
+;PCODE: $00000151 VOL: 0
+;PCODE: $00000152 VOL: 0
+;PCODE: $00000153 VOL: 0
+;PCODE: $00000154 VOL: 0
+;PCODE: $00000155 VOL: 0
+;PCODE: $00000156 VOL: 0
+; 0000 0163         {
+; 0000 0164             lcd_clear();
+;PCODE: $00000157 VOL: 0
+; 0000 0165         	lcd_puts("Clear output");
+;PCODE: $00000158 VOL: 0
+;PCODE: $00000159 VOL: 0
+;PCODE: $0000015A VOL: 0
+; 0000 0166             output [ buf - 'a' ] = 0;
+;PCODE: $0000015B VOL: 0
+;PCODE: $0000015C VOL: 0
+;PCODE: $0000015D VOL: 0
+;PCODE: $0000015E VOL: 0
+;PCODE: $0000015F VOL: 0
+;PCODE: $00000160 VOL: 0
+; 0000 0167             USART_send( '1' );
+;PCODE: $00000161 VOL: 0
+;PCODE: $00000162 VOL: 0
+; 0000 0168         }
+; 0000 0169         // set output
+; 0000 016A         else if ( buf >= 'A' && buf <= 'H' )
+;PCODE: $00000163 VOL: 0
+;PCODE: $00000164 VOL: 0
+;PCODE: $00000165 VOL: 0
+;PCODE: $00000166 VOL: 0
+;PCODE: $00000167 VOL: 0
+;PCODE: $00000168 VOL: 0
+;PCODE: $00000169 VOL: 0
+;PCODE: $0000016A VOL: 0
+;PCODE: $0000016B VOL: 0
+;PCODE: $0000016C VOL: 0
+;PCODE: $0000016D VOL: 0
+;PCODE: $0000016E VOL: 0
+; 0000 016B         {
+; 0000 016C             lcd_clear();
+;PCODE: $0000016F VOL: 0
+; 0000 016D         	lcd_puts("Set output");
+;PCODE: $00000170 VOL: 0
+;PCODE: $00000171 VOL: 0
+;PCODE: $00000172 VOL: 0
+; 0000 016E             output [ buf - 'A' ] = 1;
+;PCODE: $00000173 VOL: 0
+;PCODE: $00000174 VOL: 0
+;PCODE: $00000175 VOL: 0
+;PCODE: $00000176 VOL: 0
+;PCODE: $00000177 VOL: 0
+;PCODE: $00000178 VOL: 0
+; 0000 016F             USART_send( '0' );
+;PCODE: $00000179 VOL: 0
+;PCODE: $0000017A VOL: 0
+; 0000 0170         }
+; 0000 0171         // pull output
+; 0000 0172         else if ( buf >= '!' && buf <= ')' )
+;PCODE: $0000017B VOL: 0
+;PCODE: $0000017C VOL: 0
+;PCODE: $0000017D VOL: 0
+;PCODE: $0000017E VOL: 0
+;PCODE: $0000017F VOL: 0
+;PCODE: $00000180 VOL: 0
+;PCODE: $00000181 VOL: 0
+;PCODE: $00000182 VOL: 0
+;PCODE: $00000183 VOL: 0
+;PCODE: $00000184 VOL: 0
+;PCODE: $00000185 VOL: 0
+;PCODE: $00000186 VOL: 0
+; 0000 0173         {
+; 0000 0174             lcd_clear();
+;PCODE: $00000187 VOL: 0
+; 0000 0175         	lcd_puts("Pull output");
+;PCODE: $00000188 VOL: 0
+;PCODE: $00000189 VOL: 0
+;PCODE: $0000018A VOL: 0
+; 0000 0176             #asm ("cli");
+;PCODE: $0000018B VOL: 0
+	cli
+;PCODE: $0000018C VOL: 0
+; 0000 0177             delay_ms(20);
+;PCODE: $0000018D VOL: 0
+;PCODE: $0000018E VOL: 0
+;PCODE: $0000018F VOL: 0
+; 0000 0178             USART_send ( (output[ buf - '!' ] == 0 ? 102 : 153 ) );
+;PCODE: $00000190 VOL: 0
+;PCODE: $00000191 VOL: 0
+;PCODE: $00000192 VOL: 0
+;PCODE: $00000193 VOL: 0
+;PCODE: $00000194 VOL: 0
+;PCODE: $00000195 VOL: 0
+;PCODE: $00000196 VOL: 0
+;PCODE: $00000197 VOL: 0
+;PCODE: $00000198 VOL: 0
+;PCODE: $00000199 VOL: 0
+;PCODE: $0000019A VOL: 0
+;PCODE: $0000019B VOL: 0
+;PCODE: $0000019C VOL: 0
+;PCODE: $0000019D VOL: 0
+;PCODE: $0000019E VOL: 0
+; 0000 0179             #asm ("sei");
+;PCODE: $0000019F VOL: 0
+	sei
+;PCODE: $000001A0 VOL: 0
+; 0000 017A         }
+; 0000 017B         // ?
+; 0000 017C         else
+;PCODE: $000001A1 VOL: 0
+;PCODE: $000001A2 VOL: 0
+; 0000 017D         {
+; 0000 017E             lcd_clear();
+;PCODE: $000001A3 VOL: 0
+; 0000 017F         	lcd_puts("Invalid req");
+;PCODE: $000001A4 VOL: 0
+;PCODE: $000001A5 VOL: 0
+;PCODE: $000001A6 VOL: 0
+; 0000 0180             USART_send ( '?' );
+;PCODE: $000001A7 VOL: 0
+;PCODE: $000001A8 VOL: 0
+; 0000 0181         }
+;PCODE: $000001A9 VOL: 0
+;PCODE: $000001AA VOL: 0
+;PCODE: $000001AB VOL: 0
+;PCODE: $000001AC VOL: 0
+; 0000 0182         update();
+;PCODE: $000001AD VOL: 0
+; 0000 0183 	}
+;PCODE: $000001AE VOL: 0
+;PCODE: $000001AF VOL: 0
+; 0000 0184 }
+;PCODE: $000001B0 VOL: 0
+;PCODE: $000001B1 VOL: 0
+;PCODE: $000001B2 VOL: 0
+
+	.DSEG
+_0x1D:
+	.BYTE 0x66
+;

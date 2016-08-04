@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<title>SSM Smart Home</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.css" />
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="css/build.css" />
+		<link rel="stylesheet" href="css/font-awesome.css" />
+		<style>
+			@font-face {
+				font-family: eras;
+				src: url(fonts/ERASBD.TTF);
+			}
+			
+			.navbar-bran{
+				font-family: eras;
+				font-size: 25pt;
+				text-align: center;
+				font-weight: bold;
+				letter-spacing: 15px;
+				color: #fff;
+			}
+			
+			html,body {
+				background: #333;
+			}
+			
+			.theme-showcase{
+				margin-top: 100px;
+			}
+			
+			#chroomsens, #chroomouts, #chroomtitle {
+				color: white;
+				text-align: center;
+				font-family: eras;
+				font-size: 20pt;
+				text-align: center;
+				font-weight: bold;
+				letter-spacing: 5px;
+				color: #fff;
+				margin-bottom: 10px ;
+			}
+			
+			.set {
+				color: #fff;
+				text-align: left;
+				font-family: eras;
+				font-size: 20pt;
+				margin-bottom: 10px;
+			}
+			.set-title {
+				font-size: 14pt;
+				color: #888;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class='row'>
+					<div class="col-md-12 navbar-header navbar-bran">
+						SSM SMART HOME
+					</div>
+				</div>
+			</div>
+		</nav>		
+		<div class="container theme-showcase" role="main">
+			<div id='mainrowtitle' class="row">
+				<div class='col-md-12'>
+					<div id="chroomtitle">Room0's Settings</div>
+				</div>
+	        </div>
+			<div id='o0' class="row set">
+				<div class="col-md-2">Dev0 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o1' class="row set">
+				<div class="col-md-2">Dev1 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o2' class="row set">
+				<div class="col-md-2">Dev2 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o3' class="row set">
+				<div class="col-md-2">Dev3 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o4' class="row set">
+				<div class="col-md-2">Dev4 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o5' class="row set">
+				<div class="col-md-2">Dev5 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o6' class="row set">
+				<div class="col-md-2">Dev6 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+			<div id='o7' class="row set">
+				<div class="col-md-2">Dev7 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">Disconnected</option>
+						<option value="1">Connected</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>Disconnected</div>
+			</div>
+
+			<div id='s0' class="row set">
+				<div class="col-md-2">Sens0 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s1' class="row set">
+				<div class="col-md-2">Sens1 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s2' class="row set">
+				<div class="col-md-2">Sens2 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s3' class="row set">
+				<div class="col-md-2">Sens3 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s4' class="row set">
+				<div class="col-md-2">Sens4 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s5' class="row set">
+				<div class="col-md-2">Sens5 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s6' class="row set">
+				<div class="col-md-2">Sens6 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div id='s7' class="row set">
+				<div class="col-md-2">Sens7 - </div>
+				<div class="col-md-4">
+					<select class="form-control">
+						<option value="0">None</option>
+						<option value="1">LM35</option>
+						<option value="2">Light</option>
+					</select>
+				</div>
+				<div class="col-md-4"><span class='set-title'>VALUE - </span>30</div>
+			</div>
+			<div class="row">
+				<div id=back class="col-md-offset-4 col-md-1"><button class='form-control btn-danger'>Back</button></div>
+				<div id=save class="col-md-1"><button class='form-control btn-success'>Save</button></div>
+			</div>
+			
+	     </div>
+
+		<script type="text/javascript">
+		var getUrlParameter = function getUrlParameter(sParam) {
+			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+				sURLVariables = sPageURL.split('&'),
+				sParameterName,
+				i;
+
+			for (i = 0; i < sURLVariables.length; i++) {
+				sParameterName = sURLVariables[i].split('=');
+
+				if (sParameterName[0] === sParam) {
+					return sParameterName[1] === undefined ? true : sParameterName[1];
+				}
+			}
+		};
+		function updateValues()
+		{
+			$.ajax({
+				url: "/sets?room=" + getUrlParameter('room'),
+				dataType: "json",
+				method: 'GET',
+			}).done(function(data) {
+				for ( var tex in data )
+				{
+					if ( tex[0] == 's' ) // sensor 
+					{
+						$("#" + tex).find(".set-title").parent().html("<span class='set-title'>VALUE - </span>" + data[tex]);
+					}
+					else if ( tex[0] == 'o' ) // output
+					{
+						$("#" + tex).find(".set-title").parent().html("<span class='set-title'>VALUE - </span>" + data[tex]);
+					}
+				}
+			}).fail(function(a,b){
+				alert(b);
+			});
+		}
+		$.ajax({
+			url: "/state?room=" + getUrlParameter('room'),
+			dataType: "json",
+			method: 'GET',
+		}).done(function(data) {
+			for ( var tex in data )
+			{
+				if ( tex[0] == 's' ) // sensor 
+				{
+					$('#' + tex).find("select").children(':nth-child(' + (parseInt(data[tex]) + 1) + ')').prop('selected', true); 
+				}
+				else if ( tex[0] == 'o' ) // output
+				{
+					$('#' + tex).find("select").children(':nth-child(' + (parseInt(data[tex]) + 1) + ')').prop('selected', true); 
+				}
+			}
+		}).fail(function(a,b){
+			alert(b);
+		});
+		$("#back").click(function(){
+			window.location = 'room.html?room=' + getUrlParameter('room');
+		});
+		$("#save").click(function(){
+			var str = "";
+			$(".set").each(function(){
+				str += this.id + ":" + $(this).find("select").val() + "," ;
+			});
+			str = str.substr( 0, str.length - 1 );
+			$.ajax({
+				url: "/state?room=" + getUrlParameter('room') + "&set=" + str,
+				dataType: "json",
+				method: 'GET',
+			});
+		});
+		</script>
+	</body>
+</html>
